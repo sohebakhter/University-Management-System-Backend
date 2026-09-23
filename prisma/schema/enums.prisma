@@ -10,6 +10,11 @@ enum UserStatus {
     SUSPENDED
 }
 
+enum AuthProvider {
+    GOOGLE
+    CREDENTIAL
+}
+
 enum SemesterStatus {
     UPCOMING
     REGISTRATION_OPEN
