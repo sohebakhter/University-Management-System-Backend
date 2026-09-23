@@ -1,0 +1,22 @@
+model Registration {
+    id        String             @id @default(uuid())
+    studentId String
+    sectionId String
+    status    RegistrationStatus @default(ENROLLED)
+
+    student Student @relation(fields: [studentId], references: [id])
+
+    section Section @relation(fields: [sectionId], references: [id])
+
+    attendance Attendance[]
+    results    Result[]
+
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+    deletedAt DateTime?
+
+    @@unique([studentId, sectionId])
+    @@index([sectionId, status])
+    @@index([studentId, status])
+    @@map("registrations")
+}

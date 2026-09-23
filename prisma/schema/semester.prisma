@@ -1,0 +1,20 @@
+model Semester {
+    id     String         @id @default(uuid())
+    name   String
+    year   Int
+    status SemesterStatus @default(UPCOMING)
+
+    registrationStart DateTime?
+    registrationEnd   DateTime?
+    feeAmount         Decimal   @db.Decimal(10, 2)
+
+    sections Section[]
+    payments Payment[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([name, year])
+    @@index([status])
+    @@map("semesters")
+}

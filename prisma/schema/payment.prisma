@@ -1,0 +1,24 @@
+model Payment {
+    id         String @id @default(uuid())
+    studentId  String
+    semesterId String
+
+    amount   Decimal         @db.Decimal(10, 2)
+    provider PaymentProvider @default(BKASH)
+    status   PaymentStatus   @default(PENDING)
+
+    merchantInvoiceNumber String  @unique
+    providerPaymentId     String? @unique
+    transactionId         String? @unique
+
+    paidAt    DateTime?
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+
+    student Student @relation(fields: [studentId], references: [id])
+
+    semester Semester @relation(fields: [semesterId], references: [id])
+
+    @@index([studentId, semesterId, status])
+    @@map("payments")
+}

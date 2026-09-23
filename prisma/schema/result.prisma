@@ -1,0 +1,21 @@
+model Result {
+    id             String @id @default(uuid())
+    examId         String
+    registrationId String
+
+    marks      Decimal      @db.Decimal(6, 2)
+    grade      String?
+    gradePoint Decimal?     @db.Decimal(3, 2)
+    status     ResultStatus @default(DRAFT)
+
+    exam Exam @relation(fields: [examId], references: [id])
+
+    registration Registration @relation(fields: [registrationId], references: [id])
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([examId, registrationId])
+    @@index([registrationId, status])
+    @@map("results")
+}

@@ -1,0 +1,56 @@
+enum UserRole {
+    ADMIN
+    STUDENT
+    INSTRUCTOR
+}
+
+enum UserStatus {
+    ACTIVE
+    PENDING
+    SUSPENDED
+}
+
+enum SemesterStatus {
+    UPCOMING
+    REGISTRATION_OPEN
+    ONGOING
+    COMPLETED
+}
+
+enum RegistrationStatus {
+    ENROLLED
+    DROPPED
+    COMPLETED
+}
+
+enum AttendanceStatus {
+    PRESENT
+    ABSENT
+    LATE
+    EXCUSED
+}
+
+enum ExamType {
+    QUIZ
+    MIDTERM
+    FINAL
+    ASSIGNMENT
+}
+
+enum ResultStatus {
+    DRAFT
+    PUBLISHED
+}
+
+enum PaymentStatus {
+    PENDING
+    SUCCESS
+    FAILED
+    CANCELLED
+}
+
+enum PaymentProvider {
+    BKASH
+    STRIPE
+    SSLCOMMERZ
+}
