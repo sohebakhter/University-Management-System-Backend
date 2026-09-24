@@ -6,17 +6,18 @@ model Instructor {
     departmentId String?
     designation  String?
 
-    user User @relation(fields: [userId], references: [id])
+    instructorStatus InstructorStatus @default(PENDING)
 
+    user       User        @relation(fields: [userId], references: [id])
     department Department? @relation(fields: [departmentId], references: [id])
-
-    sections   Section[]
-    attendance Attendance[]
 
     isDeleted Boolean   @default(false)
     deletedAt DateTime?
     createdAt DateTime  @default(now())
     updatedAt DateTime  @updatedAt
+
+    sections   Section[]
+    attendance Attendance[]
 
     @@index([departmentId])
     @@map("instructors")
