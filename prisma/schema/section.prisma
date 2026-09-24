@@ -13,14 +13,15 @@ model Section {
 
     instructor Instructor @relation(fields: [instructorId], references: [id])
 
+    isDeleted Boolean   @default(false)
+    deletedAt DateTime?
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+
     registrations Registration[]
     exams         Exam[]
 
-    createdAt DateTime  @default(now())
-    updatedAt DateTime  @updatedAt
-    deletedAt DateTime?
-
     @@unique([courseId, semesterId, name])
     @@index([instructorId, semesterId])
-    @@map("section")
+    @@map("sections")
 }
