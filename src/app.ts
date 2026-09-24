@@ -12,6 +12,7 @@ import { notFound } from "./app/middleware/notFound";
 import { AuthRoutes } from "./app/module/auth/auth.route";
 import { UserRoutes } from "./app/module/user/user.route";
 import { DepartmentRoutes } from "./app/module/department/department.route";
+import { CourseRoutes } from "./app/module/course/course.route";
 
 const app: Application = express();
 
@@ -32,6 +33,7 @@ app.use(cookieParser());
 app.use("/api/v1/auth", AuthRoutes)
 app.use("/api/v1/user", UserRoutes)
 app.use("/api/v1/department", DepartmentRoutes)
+app.use("/api/v1/course", CourseRoutes)
 
 // Basic route
 app.get("/", async (req: Request, res: Response) => {

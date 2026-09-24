@@ -7,12 +7,14 @@ model Semester {
     registrationStart DateTime?
     registrationEnd   DateTime?
     feeAmount         Decimal   @db.Decimal(10, 2)
-
-    sections Section[]
-    payments Payment[]
+    isDeleted         Boolean   @default(false)
+    deletedAt         DateTime?
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    sections Section[]
+    payments Payment[]
 
     @@unique([name, year])
     @@index([status])
