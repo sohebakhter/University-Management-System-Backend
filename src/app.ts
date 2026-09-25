@@ -16,6 +16,7 @@ import { CourseRoutes } from "./app/module/course/course.route";
 import { SemesterRoutes } from "./app/module/semester/semester.route";
 import { RegistrationRoutes } from "./app/module/registration/registration.route";
 import { AttendanceRoutes } from "./app/module/attendance/attendance.route";
+import { ExamRoutes } from "./app/module/exam/exam.route";
 
 const app: Application = express();
 
@@ -40,6 +41,7 @@ app.use("/api/v1/course", CourseRoutes)
 app.use("/api/v1/semester", SemesterRoutes)
 app.use("/api/v1/registration", RegistrationRoutes)
 app.use("/api/v1/attendance", AttendanceRoutes)
+app.use("/api/v1/exam", ExamRoutes)
 
 // Basic route
 app.get("/", async (req: Request, res: Response) => {
