@@ -14,6 +14,7 @@ import { UserRoutes } from "./app/module/user/user.route";
 import { DepartmentRoutes } from "./app/module/department/department.route";
 import { CourseRoutes } from "./app/module/course/course.route";
 import { SemesterRoutes } from "./app/module/semester/semester.route";
+import { RegistrationRoutes } from "./app/module/registration/registration.route";
 
 const app: Application = express();
 
@@ -36,6 +37,7 @@ app.use("/api/v1/user", UserRoutes)
 app.use("/api/v1/department", DepartmentRoutes)
 app.use("/api/v1/course", CourseRoutes)
 app.use("/api/v1/semester", SemesterRoutes)
+app.use("/api/v1/registration", RegistrationRoutes)
 
 // Basic route
 app.get("/", async (req: Request, res: Response) => {

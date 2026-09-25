@@ -29,6 +29,7 @@ enum SemesterStatus {
 }
 
 enum RegistrationStatus {
+    PENDING
     ENROLLED
     DROPPED
     COMPLETED

@@ -2,18 +2,20 @@ model Registration {
     id        String             @id @default(uuid())
     studentId String
     sectionId String
-    status    RegistrationStatus @default(ENROLLED)
+    status    RegistrationStatus @default(PENDING)
+
+    registeredAt DateTime  @default(now())
+    droppedAt    DateTime?
 
     student Student @relation(fields: [studentId], references: [id])
 
     section Section @relation(fields: [sectionId], references: [id])
 
-    attendance Attendance[]
-    results    Result[]
-
     createdAt DateTime  @default(now())
     updatedAt DateTime  @updatedAt
-    deletedAt DateTime?
+
+    attendance Attendance[]
+    results    Result[]
 
     @@unique([studentId, sectionId])
     @@index([sectionId, status])
