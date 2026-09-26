@@ -5,10 +5,7 @@ import { AppError } from "../../utils/appError";
 import { RegistrationStatus, SemesterStatus, UserRole } from "../../../../generated/prisma/enums";
 import { RegistrationWhereInput } from "../../../../generated/prisma/models";
 
-const createRegistration = async (
-    sectionId: string,
-    user: RequestUser,
-) => {
+const createRegistration = async (sectionId: string, user: RequestUser) => {
     // 1. Find student profile
     const student = await prisma.student.findFirst({
         where: {
@@ -59,20 +56,14 @@ const createRegistration = async (
     // 4. Check registration period
     const now = new Date();
 
-    if (
-        section.semester.registrationStart &&
-        now < section.semester.registrationStart
-    ) {
+    if (section.semester.registrationStart && now < section.semester.registrationStart) {
         throw new AppError(
             httpStatus.BAD_REQUEST,
             "Registration has not started yet"
         );
     }
 
-    if (
-        section.semester.registrationEnd &&
-        now > section.semester.registrationEnd
-    ) {
+    if (section.semester.registrationEnd && now > section.semester.registrationEnd) {
         throw new AppError(
             httpStatus.BAD_REQUEST,
             "Registration period has ended"
@@ -80,15 +71,14 @@ const createRegistration = async (
     }
 
     // 5. Check existing registration
-    const existingRegistration =
-        await prisma.registration.findUnique({
-            where: {
-                studentId_sectionId: {
-                    studentId: student.id,
-                    sectionId,
-                },
+    const existingRegistration = await prisma.registration.findUnique({
+        where: {
+            studentId_sectionId: {
+                studentId: student.id,
+                sectionId,
             },
-        });
+        },
+    });
 
     if (existingRegistration) {
         throw new AppError(
@@ -294,10 +284,7 @@ const getRegistrationById = async (
     );
 };
 
-const dropRegistration = async (
-    registrationId: string,
-    user: RequestUser
-) => {
+const dropRegistration = async (registrationId: string, user: RequestUser) => {
     const registration = await prisma.registration.findUnique({
         where: {
             id: registrationId,
@@ -336,18 +323,14 @@ const dropRegistration = async (
     }
 
     // Cannot drop already dropped/completed registration
-    if (
-        registration.status === RegistrationStatus.DROPPED
-    ) {
+    if (registration.status === RegistrationStatus.DROPPED) {
         throw new AppError(
             httpStatus.BAD_REQUEST,
             "Registration is already dropped"
         );
     }
 
-    if (
-        registration.status === RegistrationStatus.COMPLETED
-    ) {
+    if (registration.status === RegistrationStatus.COMPLETED) {
         throw new AppError(
             httpStatus.BAD_REQUEST,
             "Completed registration cannot be dropped"

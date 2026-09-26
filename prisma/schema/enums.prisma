@@ -59,6 +59,7 @@ enum PaymentStatus {
     SUCCESS
     FAILED
     CANCELLED
+    REFUNDED
 }
 
 enum PaymentProvider {

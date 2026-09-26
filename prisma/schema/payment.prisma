@@ -4,16 +4,25 @@ model Payment {
     semesterId String
 
     amount   Decimal         @db.Decimal(10, 2)
+    currency String          @default("BDT")
     provider PaymentProvider @default(BKASH)
     status   PaymentStatus   @default(PENDING)
 
-    merchantInvoiceNumber String  @unique
-    providerPaymentId     String? @unique
-    transactionId         String? @unique
+    merchantInvoiceNumber String    @unique
+    bkashPaymentId        String?   @unique
+    bkashTrxId            String?
+    payerReference        String? //user email or number
+    paidAt                DateTime?
 
-    paidAt    DateTime?
-    createdAt DateTime  @default(now())
-    updatedAt DateTime  @updatedAt
+    getwayResponse Json?
+
+    refundTrxId  String?
+    refundAmount Decimal? @db.Decimal(10, 2)
+    refundReason String?
+    refundedAt   String?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 
     student Student @relation(fields: [studentId], references: [id])
 

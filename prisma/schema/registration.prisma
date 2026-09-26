@@ -1,18 +1,18 @@
 model Registration {
-    id        String             @id @default(uuid())
-    studentId String
-    sectionId String
-    status    RegistrationStatus @default(PENDING)
-
-    registeredAt DateTime  @default(now())
+    id           String             @id @default(uuid())
+    studentId    String
+    sectionId    String
+    status       RegistrationStatus @default(PENDING)
+    //section/course e registration
+    registeredAt DateTime           @default(now())
     droppedAt    DateTime?
 
     student Student @relation(fields: [studentId], references: [id])
 
     section Section @relation(fields: [sectionId], references: [id])
 
-    createdAt DateTime  @default(now())
-    updatedAt DateTime  @updatedAt
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 
     attendance Attendance[]
     results    Result[]
