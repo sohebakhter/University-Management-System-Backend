@@ -8,8 +8,8 @@ model Instructor {
 
     instructorStatus InstructorStatus @default(PENDING)
 
-    user       User        @relation(fields: [userId], references: [id])
-    department Department? @relation(fields: [departmentId], references: [id])
+    user       User        @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+    department Department? @relation(fields: [departmentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
     isDeleted Boolean   @default(false)
     deletedAt DateTime?

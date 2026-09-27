@@ -6,9 +6,9 @@ model Attendance {
 
     markedById String
 
-    registration Registration @relation(fields: [registrationId], references: [id])
+    registration Registration @relation(fields: [registrationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-    markedBy Instructor @relation(fields: [markedById], references: [id])
+    markedBy Instructor @relation(fields: [markedById], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
