@@ -18,6 +18,8 @@ import { RegistrationRoutes } from "./app/module/registration/registration.route
 import { AttendanceRoutes } from "./app/module/attendance/attendance.route";
 import { ExamRoutes } from "./app/module/exam/exam.route";
 import { ResultRoutes } from "./app/module/result/result.route";
+import { SectionRoutes } from "./app/module/section/section.route";
+import { PaymentRoutes } from "./app/module/payment/payment.route";
 
 const app: Application = express();
 
@@ -35,15 +37,17 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
 
-app.use("/api/v1/auth", AuthRoutes)
-app.use("/api/v1/user", UserRoutes)
-app.use("/api/v1/department", DepartmentRoutes)
-app.use("/api/v1/course", CourseRoutes)
-app.use("/api/v1/semester", SemesterRoutes)
-app.use("/api/v1/registration", RegistrationRoutes)
-app.use("/api/v1/attendance", AttendanceRoutes)
-app.use("/api/v1/exam", ExamRoutes)
-app.use("/api/v1/result", ResultRoutes)
+app.use("/api/v1/auth", AuthRoutes);
+app.use("/api/v1/user", UserRoutes);
+app.use("/api/v1/department", DepartmentRoutes);
+app.use("/api/v1/course", CourseRoutes);
+app.use("/api/v1/semester", SemesterRoutes);
+app.use("/api/v1/section", SectionRoutes);
+app.use("/api/v1/registration", RegistrationRoutes);
+app.use("/api/v1/payment", PaymentRoutes);
+app.use("/api/v1/attendance", AttendanceRoutes);
+app.use("/api/v1/exam", ExamRoutes);
+app.use("/api/v1/result", ResultRoutes);
 
 // Basic route
 app.get("/", async (req: Request, res: Response) => {

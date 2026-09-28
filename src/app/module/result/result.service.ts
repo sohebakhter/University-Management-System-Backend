@@ -285,6 +285,7 @@ const getMyResults = async (user: RequestUser) => {
         where: {
             registration: {
                 studentId: student.id,
+                status: RegistrationStatus.ENROLLED,
             },
             status: ResultStatus.PUBLISHED,
             exam: {
@@ -314,7 +315,7 @@ const getMyResults = async (user: RequestUser) => {
         },
     });
 
-    return myAllResults
+    return myAllResults;
 };
 
 const getResultsByRegistration = async (registrationId: string, user: RequestUser) => {
@@ -345,6 +346,13 @@ const getResultsByRegistration = async (registrationId: string, user: RequestUse
             throw new AppError(
                 httpStatus.FORBIDDEN,
                 "You can only view your own results"
+            );
+        }
+
+        if (registration.status !== RegistrationStatus.ENROLLED) {
+            throw new AppError(
+                httpStatus.FORBIDDEN,
+                "Results are only available for fully enrolled registrations"
             );
         }
     }

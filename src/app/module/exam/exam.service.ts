@@ -3,7 +3,7 @@ import { RequestUser } from "../../middleware/checkAuth";
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/appError";
 import { ICreateExamPayload, IUpdateExamPayload } from "./exam.interface";
-import { UserRole } from "../../../../generated/prisma/enums";
+import { RegistrationStatus, ResultStatus, UserRole } from "../../../../generated/prisma/enums";
 import { ExamWhereInput } from "../../../../generated/prisma/models";
 
 const createExam = async (payload: ICreateExamPayload, user: RequestUser) => {
@@ -114,6 +114,33 @@ const getExams = async (user: RequestUser) => {
         };
     }
 
+    // Student can only see exams for sections they are ENROLLED in (active/paid)
+    if (user.role === UserRole.STUDENT) {
+        const student = await prisma.student.findFirst({
+            where: {
+                userId: user.userId,
+                isDeleted: false,
+            },
+        });
+
+        if (!student) {
+            throw new AppError(
+                httpStatus.NOT_FOUND,
+                "Student profile not found"
+            );
+        }
+
+        where.section = {
+            isDeleted: false,
+            registrations: {
+                some: {
+                    studentId: student.id,
+                    status: RegistrationStatus.ENROLLED,
+                },
+            },
+        };
+    }
+
     const exams = await prisma.exam.findMany({
         where,
         include: {
@@ -140,7 +167,7 @@ const getExams = async (user: RequestUser) => {
         },
     });
 
-    return exams
+    return exams;
 };
 
 const getExamById = async (examId: string, user: RequestUser) => {
@@ -213,6 +240,47 @@ const getExamById = async (examId: string, user: RequestUser) => {
                 "You are not assigned to this section"
             );
         }
+    }
+
+    // Student must be ENROLLED in this exam's section, and can only see their own published result
+    if (user.role === UserRole.STUDENT) {
+        const student = await prisma.student.findFirst({
+            where: {
+                userId: user.userId,
+                isDeleted: false,
+            },
+        });
+
+        if (!student) {
+            throw new AppError(
+                httpStatus.NOT_FOUND,
+                "Student profile not found"
+            );
+        }
+
+        const isEnrolled = await prisma.registration.findFirst({
+            where: {
+                studentId: student.id,
+                sectionId: exam.sectionId,
+                status: RegistrationStatus.ENROLLED,
+            },
+        });
+
+        if (!isEnrolled) {
+            throw new AppError(
+                httpStatus.FORBIDDEN,
+                "You are not enrolled in this section's exam"
+            );
+        }
+
+        return {
+            ...exam,
+            results: exam.results.filter(
+                (r) =>
+                    r.registration.studentId === student.id &&
+                    r.status === ResultStatus.PUBLISHED
+            ),
+        };
     }
 
     return exam;

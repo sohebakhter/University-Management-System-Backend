@@ -2,7 +2,7 @@ import httpStatus from "http-status";
 import { RequestUser } from "../../middleware/checkAuth";
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/appError";
-import { RegistrationStatus, SemesterStatus, UserRole } from "../../../../generated/prisma/enums";
+import { PaymentStatus, RegistrationStatus, SemesterStatus, UserRole } from "../../../../generated/prisma/enums";
 import { RegistrationWhereInput } from "../../../../generated/prisma/models";
 
 const createRegistration = async (sectionId: string, user: RequestUser) => {
@@ -34,6 +34,7 @@ const createRegistration = async (sectionId: string, user: RequestUser) => {
             },
         },
         include: {
+            course: true,
             semester: true,
         },
     });
@@ -70,7 +71,39 @@ const createRegistration = async (sectionId: string, user: RequestUser) => {
         );
     }
 
-    // 5. Check existing registration
+    // 5. Department check
+    if (student.departmentId && section.course.departmentId !== student.departmentId) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "You can only register for courses offered by your department"
+        );
+    }
+
+    // 6. Check duplicate course registration in the same semester
+    const existingCourseRegistration = await prisma.registration.findFirst({
+        where: {
+            studentId: student.id,
+            section: {
+                courseId: section.courseId,
+                semesterId: section.semesterId,
+            },
+            status: {
+                in: [RegistrationStatus.PENDING, RegistrationStatus.ENROLLED],
+            },
+        },
+        include: {
+            section: true,
+        },
+    });
+
+    if (existingCourseRegistration) {
+        throw new AppError(
+            httpStatus.CONFLICT,
+            `You are already registered for this course in section ${existingCourseRegistration.section.name}`
+        );
+    }
+
+    // 7. Check existing section registration (handling DROPPED vs active)
     const existingRegistration = await prisma.registration.findUnique({
         where: {
             studentId_sectionId: {
@@ -81,39 +114,93 @@ const createRegistration = async (sectionId: string, user: RequestUser) => {
     });
 
     if (existingRegistration) {
-        throw new AppError(
-            httpStatus.CONFLICT,
-            "You are already registered for this section"
-        );
+        if (existingRegistration.status === RegistrationStatus.ENROLLED) {
+            throw new AppError(
+                httpStatus.CONFLICT,
+                "You are already enrolled in this section"
+            );
+        }
+        if (existingRegistration.status === RegistrationStatus.PENDING) {
+            throw new AppError(
+                httpStatus.CONFLICT,
+                "You already have a pending registration for this section"
+            );
+        }
+        if (existingRegistration.status === RegistrationStatus.COMPLETED) {
+            throw new AppError(
+                httpStatus.CONFLICT,
+                "You have already completed this course section"
+            );
+        }
     }
 
-    // 6. Check enrolled capacity
-    const enrolledCount = await prisma.registration.count({
+    // 8. Check capacity (count both ENROLLED and PENDING)
+    const occupiedCount = await prisma.registration.count({
         where: {
             sectionId,
-            status: RegistrationStatus.ENROLLED,
+            status: {
+                in: [RegistrationStatus.ENROLLED, RegistrationStatus.PENDING],
+            },
         },
     });
 
-    if (enrolledCount >= section.capacity) {
+    if (occupiedCount >= section.capacity) {
         throw new AppError(
             httpStatus.BAD_REQUEST,
             "Section capacity is full"
         );
     }
 
-    // 7. Create registration
+    // 9. Check if student already completed payment for this semester
+    const paidSemesterPayment = await prisma.payment.findFirst({
+        where: {
+            studentId: student.id,
+            semesterId: section.semesterId,
+            status: PaymentStatus.SUCCESS,
+        },
+    });
+
+    const targetStatus = paidSemesterPayment
+        ? RegistrationStatus.ENROLLED
+        : RegistrationStatus.PENDING;
+
+    // 10. If previously DROPPED, reactivate registration; otherwise create new
+    if (existingRegistration && existingRegistration.status === RegistrationStatus.DROPPED) {
+        const result = await prisma.registration.update({
+            where: {
+                id: existingRegistration.id,
+            },
+            data: {
+                status: targetStatus,
+                droppedAt: null,
+                registeredAt: new Date(),
+            },
+            include: {
+                section: {
+                    include: {
+                        course: true,
+                        semester: true,
+                        instructor: true,
+                    },
+                },
+            },
+        });
+
+        return result;
+    }
+
     const result = await prisma.registration.create({
         data: {
             studentId: student.id,
             sectionId,
-            status: RegistrationStatus.PENDING,
+            status: targetStatus,
         },
         include: {
             section: {
                 include: {
                     course: true,
                     semester: true,
+                    instructor: true,
                 },
             },
         },
@@ -289,6 +376,13 @@ const dropRegistration = async (registrationId: string, user: RequestUser) => {
         where: {
             id: registrationId,
         },
+        include: {
+            section: {
+                include: {
+                    semester: true,
+                },
+            },
+        },
     });
 
     if (!registration) {
@@ -318,6 +412,14 @@ const dropRegistration = async (registrationId: string, user: RequestUser) => {
             throw new AppError(
                 httpStatus.FORBIDDEN,
                 "You can only drop your own registration"
+            );
+        }
+
+        // Student can only drop while semester registration is open
+        if (registration.section.semester.status !== SemesterStatus.REGISTRATION_OPEN) {
+            throw new AppError(
+                httpStatus.BAD_REQUEST,
+                "You can only drop courses during the open registration period"
             );
         }
     }

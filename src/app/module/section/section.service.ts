@@ -1,9 +1,9 @@
-import { UserRole } from "../../../../generated/prisma/enums";
+import { RegistrationStatus, UserRole } from "../../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
 import { RequestUser } from "../../middleware/checkAuth";
 import { AppError } from "../../utils/appError";
-import { ICreateSectionPayload, IUpdateSectionPayload } from "./section.interface";
-import httpStatus from "http-status"
+import { ICreateSectionPayload, ISectionFilterParams, IUpdateSectionPayload } from "./section.interface";
+import httpStatus from "http-status";
 
 const createSection = async (payload: ICreateSectionPayload) => {
     // 1. Check course
@@ -87,24 +87,68 @@ const createSection = async (payload: ICreateSectionPayload) => {
     return result;
 };
 
-const getAllSections = async () => {
-    const result = await prisma.section.findMany({
-        where: {
+const getAllSections = async (filters: ISectionFilterParams = {}) => {
+    const { semesterId, courseId, departmentId, instructorId, searchTerm } = filters;
+
+    const where: any = {
+        isDeleted: false,
+        course: {
             isDeleted: false,
-            course: {
-                isDeleted: false,
-            },
-            semester: {
-                isDeleted: false,
-            },
-            instructor: {
-                isDeleted: false,
-            },
+            ...(departmentId && { departmentId }),
         },
+        semester: {
+            isDeleted: false,
+            ...(semesterId && { id: semesterId }),
+        },
+        instructor: {
+            isDeleted: false,
+            ...(instructorId && { id: instructorId }),
+        },
+    };
+
+    if (courseId) {
+        where.courseId = courseId;
+    }
+
+    if (searchTerm) {
+        where.OR = [
+            { name: { contains: searchTerm, mode: "insensitive" } },
+            { course: { title: { contains: searchTerm, mode: "insensitive" } } },
+            { course: { code: { contains: searchTerm, mode: "insensitive" } } },
+        ];
+    }
+
+    const result = await prisma.section.findMany({
+        where,
         include: {
-            course: true,
+            course: {
+                include: {
+                    department: true,
+                },
+            },
             semester: true,
-            instructor: true,
+            instructor: {
+                include: {
+                    user: {
+                        select: {
+                            id: true,
+                            name: true,
+                            email: true,
+                        },
+                    },
+                },
+            },
+            _count: {
+                select: {
+                    registrations: {
+                        where: {
+                            status: {
+                                in: [RegistrationStatus.ENROLLED, RegistrationStatus.PENDING],
+                            },
+                        },
+                    },
+                },
+            },
         },
         orderBy: {
             createdAt: "desc",
@@ -130,9 +174,34 @@ const getSectionById = async (sectionId: string) => {
             },
         },
         include: {
-            course: true,
+            course: {
+                include: {
+                    department: true,
+                },
+            },
             semester: true,
-            instructor: true,
+            instructor: {
+                include: {
+                    user: {
+                        select: {
+                            id: true,
+                            name: true,
+                            email: true,
+                        },
+                    },
+                },
+            },
+            _count: {
+                select: {
+                    registrations: {
+                        where: {
+                            status: {
+                                in: [RegistrationStatus.ENROLLED, RegistrationStatus.PENDING],
+                            },
+                        },
+                    },
+                },
+            },
         },
     });
 
@@ -306,7 +375,14 @@ const getSectionStudents = async (sectionId: string, user: RequestUser) => {
     // Admin can access any section
     // Instructor can access only assigned section
     if (user.role === UserRole.INSTRUCTOR) {
-        if (user.userId !== section.instructorId) {
+        const instructor = await prisma.instructor.findFirst({
+            where: {
+                userId: user.userId,
+                isDeleted: false,
+            },
+        });
+
+        if (!instructor || section.instructorId !== instructor.id) {
             throw new AppError(
                 httpStatus.FORBIDDEN,
                 "You are not assigned to this section"
@@ -317,6 +393,9 @@ const getSectionStudents = async (sectionId: string, user: RequestUser) => {
     const registrations = await prisma.registration.findMany({
         where: {
             sectionId: sectionId,
+            status: {
+                in: [RegistrationStatus.ENROLLED, RegistrationStatus.PENDING],
+            },
         },
         include: {
             student: {

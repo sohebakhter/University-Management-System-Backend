@@ -15,7 +15,7 @@ const createSection = catchAsync(async (req, res) => {
 });
 
 const getAllSections = catchAsync(async (req, res) => {
-    const result = await SectionService.getAllSections();
+    const result = await SectionService.getAllSections(req.query);
 
     sendResponse(res, {
         statusCode: httpStatus.OK,

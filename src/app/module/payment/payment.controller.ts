@@ -53,8 +53,8 @@ const getMyPayments = catchAsync(async (req: Request, res: Response) => {
 );
 
 const getPaymentById = catchAsync(async (req: Request, res: Response) => {
-    const paymentId = req.params.paymentId as string
-    const user = req.user!
+    const paymentId = req.params.paymentId as string;
+    const user = req.user!;
     const result = await PaymentService.getPaymentById(paymentId, user);
 
     sendResponse(res, {
@@ -63,8 +63,19 @@ const getPaymentById = catchAsync(async (req: Request, res: Response) => {
         message: "Payment retrieved successfully",
         data: result,
     });
-}
-);
+});
+
+const confirmPayment = catchAsync(async (req: Request, res: Response) => {
+    const paymentId = req.params.paymentId as string;
+    const result = await PaymentService.confirmPayment(paymentId);
+
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "Payment confirmed and student registrations activated successfully",
+        data: result,
+    });
+});
 
 export const PaymentController = {
     checkout,
@@ -72,4 +83,5 @@ export const PaymentController = {
     bkashCallback,
     getMyPayments,
     getPaymentById,
+    confirmPayment,
 };

@@ -35,4 +35,10 @@ router.get(
     PaymentController.getPaymentById
 );
 
+router.patch(
+    "/:paymentId/confirm",
+    auth(UserRole.ADMIN),
+    PaymentController.confirmPayment
+);
+
 export const PaymentRoutes = router;

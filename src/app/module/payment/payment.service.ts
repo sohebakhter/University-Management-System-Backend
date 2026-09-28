@@ -3,7 +3,7 @@ import { randomUUID } from "crypto";
 import { RequestUser } from "../../middleware/checkAuth";
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/appError";
-import { PaymentStatus, SemesterStatus, UserRole } from "../../../../generated/prisma/enums";
+import { PaymentStatus, RegistrationStatus, SemesterStatus, UserRole } from "../../../../generated/prisma/enums";
 import { getBkashIdToken } from "../../lib/bkash";
 import config from "../../config";
 
@@ -74,6 +74,26 @@ const checkout = async (semesterId: string, user: RequestUser) => {
         throw new AppError(
             httpStatus.CONFLICT,
             "Payment for this semester has already been completed"
+        );
+    }
+
+    // Check if student has registered sections for this semester
+    const studentRegistrations = await prisma.registration.findMany({
+        where: {
+            studentId: student.id,
+            section: {
+                semesterId: semester.id,
+            },
+            status: {
+                in: [RegistrationStatus.PENDING, RegistrationStatus.ENROLLED],
+            },
+        },
+    });
+
+    if (studentRegistrations.length === 0) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "You have no registered sections for this semester to pay for"
         );
     }
 
@@ -300,18 +320,34 @@ const bkashCallback = async (query: Record<string, any>) => {
             };
         }
 
-        await prisma.payment.update({
-            where: {
-                id: payment.id,
-            },
-            data: {
-                status: PaymentStatus.SUCCESS,
-                bkashTrxId: result.trxID,
-                paidAt: result.paymentExecuteTime
-                    ? new Date(result.paymentExecuteTime)
-                    : new Date(),
-                getwayResponse: result,
-            },
+        await prisma.$transaction(async (tx) => {
+            await tx.payment.update({
+                where: {
+                    id: payment.id,
+                },
+                data: {
+                    status: PaymentStatus.SUCCESS,
+                    bkashTrxId: result.trxID,
+                    paidAt: result.paymentExecuteTime
+                        ? new Date(result.paymentExecuteTime)
+                        : new Date(),
+                    getwayResponse: result,
+                },
+            });
+
+            // Activate all pending registrations for this student in this semester
+            await tx.registration.updateMany({
+                where: {
+                    studentId: payment.studentId,
+                    section: {
+                        semesterId: payment.semesterId,
+                    },
+                    status: RegistrationStatus.PENDING,
+                },
+                data: {
+                    status: RegistrationStatus.ENROLLED,
+                },
+            });
         });
 
         return {
@@ -446,10 +482,67 @@ const getPaymentById = async (paymentId: string, user: RequestUser) => {
     return payment;
 };
 
+const confirmPayment = async (paymentId: string) => {
+    const payment = await prisma.payment.findUnique({
+        where: {
+            id: paymentId,
+        },
+    });
+
+    if (!payment) {
+        throw new AppError(
+            httpStatus.NOT_FOUND,
+            "Payment record not found"
+        );
+    }
+
+    if (payment.status === PaymentStatus.SUCCESS) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Payment has already been confirmed"
+        );
+    }
+
+    const result = await prisma.$transaction(async (tx) => {
+        const updatedPayment = await tx.payment.update({
+            where: {
+                id: payment.id,
+            },
+            data: {
+                status: PaymentStatus.SUCCESS,
+                paidAt: new Date(),
+            },
+            include: {
+                student: true,
+                semester: true,
+            },
+        });
+
+        // Activate all pending registrations for this student in this semester
+        await tx.registration.updateMany({
+            where: {
+                studentId: payment.studentId,
+                section: {
+                    semesterId: payment.semesterId,
+                },
+                status: RegistrationStatus.PENDING,
+            },
+            data: {
+                status: RegistrationStatus.ENROLLED,
+            },
+        });
+
+        return updatedPayment;
+    });
+
+    return result;
+};
+
 export const PaymentService = {
     checkout,
     initiateBkashPayment,
     bkashCallback,
     getMyPayments,
     getPaymentById,
+    confirmPayment,
 };

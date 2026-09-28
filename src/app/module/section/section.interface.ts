@@ -12,3 +12,11 @@ export interface IUpdateSectionPayload {
     semesterId?: string;
     instructorId?: string;
 }
+
+export interface ISectionFilterParams {
+    semesterId?: string;
+    courseId?: string;
+    departmentId?: string;
+    instructorId?: string;
+    searchTerm?: string;
+}
