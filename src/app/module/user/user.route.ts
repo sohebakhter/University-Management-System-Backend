@@ -12,29 +12,7 @@ import {
 
 const router = Router()
 
-router.get(
-    "/",
-    auth(UserRole.ADMIN),
-    UserController.getAllUser
-);
-router.get(
-    "/:userId",
-    auth(UserRole.ADMIN, UserRole.INSTRUCTOR, UserRole.STUDENT),
-    UserController.getSingleUser
-);
-router.patch(
-    "/:userId/status",
-    auth(UserRole.ADMIN),
-    validateRequest(UpdateUserStatusZodSchema),
-    UserController.updateUserStatus
-);
-
-router.patch(
-    "/:userId",
-    auth(UserRole.ADMIN, UserRole.INSTRUCTOR, UserRole.STUDENT),
-    validateRequest(UpdateUserZodSchema),
-    UserController.updateUser
-);
+// ── Specific / static routes first ────────────────────────────────────────
 
 router.get(
     "/students",
@@ -62,16 +40,44 @@ router.get(
 );
 
 router.get(
-    "instructors/:instructorId",
+    "/instructors/:instructorId",
     auth(UserRole.ADMIN, UserRole.INSTRUCTOR),
     UserController.getSingleInstructor
 );
 
 router.patch(
-    "instructors/:instructorId",
+    "/instructors/:instructorId",
     auth(UserRole.ADMIN, UserRole.INSTRUCTOR),
     validateRequest(UpdateInstructorZodSchema),
     UserController.updateInstructor
+);
+
+// ── Generic / dynamic routes last ──────────────────────────────────────────
+
+router.get(
+    "/",
+    auth(UserRole.ADMIN),
+    UserController.getAllUser
+);
+
+router.get(
+    "/:userId",
+    auth(UserRole.ADMIN, UserRole.INSTRUCTOR, UserRole.STUDENT),
+    UserController.getSingleUser
+);
+
+router.patch(
+    "/:userId/status",
+    auth(UserRole.ADMIN),
+    validateRequest(UpdateUserStatusZodSchema),
+    UserController.updateUserStatus
+);
+
+router.patch(
+    "/:userId",
+    auth(UserRole.ADMIN, UserRole.INSTRUCTOR, UserRole.STUDENT),
+    validateRequest(UpdateUserZodSchema),
+    UserController.updateUser
 );
 
 export const UserRoutes = router

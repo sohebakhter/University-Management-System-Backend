@@ -28,15 +28,15 @@ const getSingleUser = catchAsync(async (req: Request, res: Response) => {
     });
 });
 const updateUserStatus = catchAsync(async (req: Request, res: Response) => {
-    const { userId } = req.params;
-    const { status } = req.body;
+    const userId = req.params.userId as string;
+    const payload = req.body;
 
-    const result = await UserServices.updateUserStatus(userId as string, status);
+    const result = await UserServices.updateUserStatus(userId, payload);
 
     sendResponse(res, {
         success: true,
         statusCode: httpStatus.OK,
-        message: `User ${status.toLowerCase()} successfully`,
+        message: `User ${payload?.status?.toLowerCase()} successfully`,
         data: result,
     });
 });

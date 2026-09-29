@@ -15,4 +15,5 @@ export interface IUpdateStudentPayload {
 export interface IUpdateInstructorPayload {
     name?: string;
     departmentId?: string;
+    designation?: string
 }

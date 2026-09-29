@@ -72,7 +72,7 @@ export const auth = (...requiredRoles: UserRole[]) => {
         if (user.status === UserStatus.SUSPENDED) {
             throw new AppError(
                 httpStatus.FORBIDDEN,
-                "Your account has been blocked. Please contact support.",
+                "Your account has been suspended. Please contact support.",
             );
         }
 
