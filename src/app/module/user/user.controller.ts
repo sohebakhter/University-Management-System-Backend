@@ -131,6 +131,20 @@ const updateInstructor = catchAsync(async (req, res) => {
         data: result,
     });
 });
+const updateInstructorStatus = catchAsync(async (req, res) => {
+    const instructorId = req.params.instructorId as string;
+    const payload = req.body
+    const user = req.user!
+
+    const result = await UserServices.updateInstructorStatus(instructorId, payload, user);
+
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "Instructor status updated successfully",
+        data: result,
+    });
+});
 
 export const UserController = {
     getAllUser,
@@ -142,5 +156,6 @@ export const UserController = {
     updateStudent,
     getAllInstructors,
     getSingleInstructor,
-    updateInstructor
+    updateInstructor,
+    updateInstructorStatus
 }

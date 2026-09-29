@@ -51,6 +51,11 @@ router.patch(
     validateRequest(UpdateInstructorZodSchema),
     UserController.updateInstructor
 );
+router.patch(
+    "/instructors/:instructorId/status",
+    auth(UserRole.ADMIN),
+    UserController.updateInstructorStatus
+);
 
 // ── Generic / dynamic routes last ──────────────────────────────────────────
 

@@ -1,3 +1,5 @@
+import { InstructorStatus } from "../../../../generated/prisma/enums";
+
 export interface IUpdateUserStatusPayload {
     status: "ACTIVE" | "SUSPENDED"
 }
@@ -16,4 +18,7 @@ export interface IUpdateInstructorPayload {
     name?: string;
     departmentId?: string;
     designation?: string
+}
+export interface IUpdateInstructorStatusPayload {
+    instructorStatus: InstructorStatus
 }

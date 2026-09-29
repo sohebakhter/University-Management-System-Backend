@@ -4,7 +4,7 @@ import { IQuery } from "../../interfaces";
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/appError";
 import httpStatus from "http-status"
-import { IUpdateInstructorPayload, IUpdateStudentPayload, IUpdateUserPayload, IUpdateUserStatusPayload } from "./user.interface";
+import { IUpdateInstructorPayload, IUpdateInstructorStatusPayload, IUpdateStudentPayload, IUpdateUserPayload, IUpdateUserStatusPayload } from "./user.interface";
 import { RequestUser } from "../../middleware/checkAuth";
 
 const getAllUser = async (query: IQuery) => {
@@ -397,6 +397,45 @@ const updateInstructor = async (
 
     return updatedInstructor;
 };
+const updateInstructorStatus = async (
+    instructorId: string,
+    payload: IUpdateInstructorStatusPayload,
+    user: RequestUser,
+) => {
+    // 1. Check if instructor exists
+    const existingInstructor = await prisma.instructor.findUnique({
+        where: {
+            id: instructorId,
+        },
+    });
+
+    if (!existingInstructor) {
+        throw new AppError(
+            httpStatus.NOT_FOUND,
+            "Instructor not found"
+        );
+    }
+
+    // 2. Check Admin or Self
+    if (user.role !== UserRole.ADMIN) {
+        throw new AppError(
+            httpStatus.FORBIDDEN,
+            "You are not authorized to update this instructor status"
+        );
+    }
+
+    // 3. Update instructor profile
+    const updatedInstructor = await prisma.instructor.update({
+        where: {
+            id: instructorId,
+        },
+        data: {
+            instructorStatus: payload.instructorStatus
+        },
+    });
+
+    return updatedInstructor;
+};
 export const UserServices = {
     getAllUser,
     getSingleUser,
@@ -407,5 +446,6 @@ export const UserServices = {
     updateStudent,
     getAllInstructors,
     getSingleInstructor,
-    updateInstructor
+    updateInstructor,
+    updateInstructorStatus
 }
