@@ -427,11 +427,12 @@ const googleLogin = async (payload: IGoogleLoginPayload) => {
                 data: {
                     name: googleIdTokenPayload.name,
                     email: googleIdTokenPayload.email,
+                    image: googleIdTokenPayload.picture,
                     role: UserRole.STUDENT,
                     googleId: googleIdTokenPayload.sub,
                     authProvider: AuthProvider.GOOGLE,
                     emailVerified: true,
-                    patient: {
+                    student: {
                         create: {
                             name: googleIdTokenPayload.name,
                             email: googleIdTokenPayload.email,

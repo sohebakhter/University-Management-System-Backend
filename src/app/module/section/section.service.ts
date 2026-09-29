@@ -1,4 +1,4 @@
-import { RegistrationStatus, UserRole } from "../../../../generated/prisma/enums";
+import { InstructorStatus, RegistrationStatus, UserRole } from "../../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
 import { RequestUser } from "../../middleware/checkAuth";
 import { AppError } from "../../utils/appError";
@@ -48,6 +48,12 @@ const createSection = async (payload: ICreateSectionPayload) => {
         throw new AppError(
             httpStatus.NOT_FOUND,
             "Instructor not found or deleted"
+        );
+    }
+    if (instructor.instructorStatus !== InstructorStatus.APPROVED) {
+        throw new AppError(
+            httpStatus.NOT_FOUND,
+            "Instructor not approved yet"
         );
     }
 
@@ -284,6 +290,12 @@ const updateSection = async (sectionId: string, payload: IUpdateSectionPayload) 
             throw new AppError(
                 httpStatus.NOT_FOUND,
                 "Instructor not found or deleted"
+            );
+        }
+        if (instructor.instructorStatus !== InstructorStatus.APPROVED) {
+            throw new AppError(
+                httpStatus.NOT_FOUND,
+                "Instructor not approved yet"
             );
         }
     }

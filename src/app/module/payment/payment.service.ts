@@ -171,13 +171,12 @@ const initiateBkashPayment = async (paymentId: string, user: RequestUser) => {
         );
     }
 
-    if (payment.status !== PaymentStatus.PENDING) {
+    if (payment.status !== PaymentStatus.PENDING && payment.status !== PaymentStatus.FAILED) {
         throw new AppError(
             httpStatus.CONFLICT,
             `Payment is already ${payment.status.toLowerCase()}`
         );
     }
-
     if (payment.semester.isDeleted) {
         throw new AppError(
             httpStatus.BAD_REQUEST,
@@ -210,7 +209,7 @@ const initiateBkashPayment = async (paymentId: string, user: RequestUser) => {
 
                 callbackURL: `${config.bkash_callback_url}/payment/bkash/callback`,
 
-                merchantAssociationInfo: "University Management System",
+                merchantAssociationInfo: "MI05MID54RF09123456One",
 
                 amount: payment.amount.toString(),
                 currency: payment.currency,
@@ -271,6 +270,13 @@ const bkashCallback = async (query: Record<string, any>) => {
 
     const bkashIdToken = await getBkashIdToken();
 
+    if (!bkashIdToken) {
+        throw new AppError(
+            httpStatus.INTERNAL_SERVER_ERROR,
+            "Bkash id Token is missing",
+        );
+    }
+
     const executeResponse = await fetch(`${config.bkash_base_url}/tokenized/checkout/execute`,
         {
             method: "POST",
@@ -328,9 +334,7 @@ const bkashCallback = async (query: Record<string, any>) => {
                 data: {
                     status: PaymentStatus.SUCCESS,
                     bkashTrxId: result.trxID,
-                    paidAt: result.paymentExecuteTime
-                        ? new Date(result.paymentExecuteTime)
-                        : new Date(),
+                    paidAt: new Date(),
                     getwayResponse: result,
                 },
             });
