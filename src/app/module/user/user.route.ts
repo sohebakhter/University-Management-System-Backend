@@ -2,6 +2,13 @@ import { Router } from "express";
 import { auth } from "../../middleware/checkAuth";
 import { UserRole } from "../../../../generated/prisma/enums";
 import { UserController } from "./user.controller";
+import { validateRequest } from "../../middleware/validateRequest";
+import {
+    UpdateInstructorZodSchema,
+    UpdateStudentZodSchema,
+    UpdateUserStatusZodSchema,
+    UpdateUserZodSchema,
+} from "./user.validation";
 
 const router = Router()
 
@@ -18,12 +25,14 @@ router.get(
 router.patch(
     "/:userId/status",
     auth(UserRole.ADMIN),
+    validateRequest(UpdateUserStatusZodSchema),
     UserController.updateUserStatus
 );
 
 router.patch(
     "/:userId",
     auth(UserRole.ADMIN, UserRole.INSTRUCTOR, UserRole.STUDENT),
+    validateRequest(UpdateUserZodSchema),
     UserController.updateUser
 );
 
@@ -42,6 +51,7 @@ router.get(
 router.patch(
     "/students/:studentId",
     auth(UserRole.ADMIN, UserRole.STUDENT),
+    validateRequest(UpdateStudentZodSchema),
     UserController.updateStudent
 );
 
@@ -60,6 +70,7 @@ router.get(
 router.patch(
     "instructors/:instructorId",
     auth(UserRole.ADMIN, UserRole.INSTRUCTOR),
+    validateRequest(UpdateInstructorZodSchema),
     UserController.updateInstructor
 );
 

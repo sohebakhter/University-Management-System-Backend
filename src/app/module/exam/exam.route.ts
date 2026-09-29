@@ -2,12 +2,15 @@ import { Router } from "express";
 import { ExamController } from "./exam.controller";
 import { auth } from "../../middleware/checkAuth";
 import { UserRole } from "../../../../generated/prisma/enums";
+import { validateRequest } from "../../middleware/validateRequest";
+import { CreateExamZodSchema, UpdateExamZodSchema } from "./exam.validation";
 
 const router = Router();
 
 router.post(
     "/",
     auth(UserRole.ADMIN, UserRole.INSTRUCTOR),
+    validateRequest(CreateExamZodSchema),
     ExamController.createExam
 );
 
@@ -26,6 +29,7 @@ router.get(
 router.patch(
     "/:examId",
     auth(UserRole.ADMIN, UserRole.INSTRUCTOR),
+    validateRequest(UpdateExamZodSchema),
     ExamController.updateExam
 );
 
