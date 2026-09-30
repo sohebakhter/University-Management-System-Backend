@@ -1,0 +1,1695 @@
+{
+  "info": {
+    "_postman_id": "eac4d56a-9470-402d-a50a-617b7bf18dab",
+    "name": "University Management V1",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52524169",
+    "_collection_link": "https://go.postman.co/collection/52524169-eac4d56a-9470-402d-a50a-617b7bf18dab?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"INS-Soheb\",\r\n    \"email\": \"mrdjworker@gmail.com\",\r\n    \"password\": \"aA@123456\",\r\n    \"role\": \"INSTRUCTOR\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Email",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    // \"email\": \"sohebakhterbadhan@gmail.com\",\r\n    \"email\": \"mrdjworker@gmail.com\",\r\n    // \"email\": \"admin@gmail.com\",\r\n    \"otp\": \"647915\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/verify-email",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "verify-email"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"token\": \"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": ""
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    // \"email\": \"sohebakhterbadhan@gmail.com\",\r\n    // \"email\": \"mrdjworker@gmail.com\",\r\n    \"email\": \"admin@gmail.com\",\r\n    \"password\": \"aA@123456\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Me",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Google Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"idToken\": \"eyJhbGciOiJSUzI1NiIsImtpZCI6ImYxMGY4NzQwNWE5NzljMWRmMzZkZjI2NjA2NzM0ZjMzY2Q4NWMyNzEiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI3MDU5MDY0NTM5MTAtcnNvbHBxcWQ2MDliZmg3Y2YyYThtY2tsbnZuZmd1cWkuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiI3MDU5MDY0NTM5MTAtcnNvbHBxcWQ2MDliZmg3Y2YyYThtY2tsbnZuZmd1cWkuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMDY3NDIyNDg0MjMxOTY3MDUxODgiLCJlbWFpbCI6ImZhY2Vib29raW1wb3J0YW50MTAwQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJuYmYiOjE3OTA3MTYyNTMsIm5hbWUiOiJPbiBteSB3YXkiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jSzlBQTRMUGNqSmtWSUdXYjgxLXlYQWJDYUVhbFMtUXB3dm1ydW1OSmpQWmh0OWt4WnY9czk2LWMiLCJnaXZlbl9uYW1lIjoiT24gbXkgd2F5IiwiaWF0IjoxNzkwNzE2NTUzLCJleHAiOjE3OTA3MjAxNTMsImp0aSI6IjExOTVlNjMxNmEyMTdiNTIwMWM0YmVhMzI4MzQyYzZjNGJmZTVhOTMifQ.hihePWfXUQSX_NdKpZDWI3R-rSK2QKF2iYhWSSE-s3XuzesHWpnszK4zqpPmqdKV9IeXP1xCmS_xGJWNyUGlHY_lWxD-JGbVNfmSHF1kdzhoRW6HwK9xqOCAYJMCDcD4kUdx9MRo1d3feSru-GFPscYgVjVdM6UliERlUtSmehhNA0V3UjbO06ARzGdd4DnTcUQOLfy9uKODugdCWllOWxr-W7b28O8g7pgkEW9LdBafdd2uCoIsB5sfGxw_3OyUBt1oezdujhEP1g3wpQyWHsAnNFLTviqdRJDzW2na6GGAj_FIrkohfFvptMTOfX1yZ3DD5lCYuxkJ7DzJ6d0rIQ\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/google",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "google"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/forgot-password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "forgot-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"\",\r\n    \"otp\": \"\",\r\n    \"newPassword\": \"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/reset-password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "reset-password"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "Get All User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/user?searchTerm=Soheb",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "ACTIVE",
+                  "disabled": true
+                },
+                {
+                  "key": "role",
+                  "value": "STUDENT",
+                  "disabled": true
+                },
+                {
+                  "key": "searchTerm",
+                  "value": "Soheb"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/user/f865aa6c-233c-4e19-b5fa-886eaef1b1df",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user",
+                "f865aa6c-233c-4e19-b5fa-886eaef1b1df"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update User Status - Admin",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"status\": \"SUSPENDED\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/user/f865aa6c-233c-4e19-b5fa-886eaef1b1df/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user",
+                "f865aa6c-233c-4e19-b5fa-886eaef1b1df",
+                "status"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": [
+                    "postman-cloud:///1f14872a-b242-43a0-b9b7-9afa113d3a76"
+                  ]
+                },
+                {
+                  "key": "name",
+                  "value": "Kuddus 123",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/user/168667cb-657d-4af6-9e6e-8182fd8287a1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user",
+                "168667cb-657d-4af6-9e6e-8182fd8287a1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Students",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/user/students",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user",
+                "students"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single Student",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/user/students/8357b8a3-f739-4569-8261-b7370bdfb09a",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user",
+                "students",
+                "8357b8a3-f739-4569-8261-b7370bdfb09a"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Student",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Updated 2 Soheb\"\r\n    // \"departmentId\": \"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/user/students/8357b8a3-f739-4569-8261-b7370bdfb09a",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user",
+                "students",
+                "8357b8a3-f739-4569-8261-b7370bdfb09a"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Instructors",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/user/instructors",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user",
+                "instructors"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single Instructor",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/user/instructors/033de0b3-d670-4755-993b-7fff533a702d",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user",
+                "instructors",
+                "033de0b3-d670-4755-993b-7fff533a702d"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Instructor",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Updated INS-Soheb\",\r\n    \"designation\": \"Assistant Professor\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/user/instructors/033de0b3-d670-4755-993b-7fff533a702d",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user",
+                "instructors",
+                "033de0b3-d670-4755-993b-7fff533a702d"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Instructor Status",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"instructorStatus\": \"APPROVED\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/user/instructors/:instructorId/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "user",
+                "instructors",
+                ":instructorId",
+                "status"
+              ],
+              "variable": [
+                {
+                  "key": "instructorId",
+                  "value": "033de0b3-d670-4755-993b-7fff533a702d"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Department",
+      "item": [
+        {
+          "name": "Create Department",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\":\"CSe\",\r\n    \"code\":\"cse-101\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/department",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "department"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Departments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/department",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "department"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single Department",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/department/0e09aa80-6ee0-4f5c-bab5-e7c287650bda",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "department",
+                "0e09aa80-6ee0-4f5c-bab5-e7c287650bda"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Department",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"CSE - Computer Science & Engineering\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/department/0e09aa80-6ee0-4f5c-bab5-e7c287650bda",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "department",
+                "0e09aa80-6ee0-4f5c-bab5-e7c287650bda"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Department",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/department/0e09aa80-6ee0-4f5c-bab5-e7c287650bda",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "department",
+                "0e09aa80-6ee0-4f5c-bab5-e7c287650bda"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Course",
+      "item": [
+        {
+          "name": "Create Course",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\": \"Data Structures and Algorithms\",\r\n    \"code\": \"CSE-201\",\r\n    \"credit\": 3,\r\n    \"departmentId\": \"0e09aa80-6ee0-4f5c-bab5-e7c287650bda\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/course",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "course"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Courses",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/course",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "course"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Course By Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/course/7bb04f07-5609-4915-8f9b-a36e15ffb248",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "course",
+                "7bb04f07-5609-4915-8f9b-a36e15ffb248"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Course",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"credit\": 4\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/course/7bb04f07-5609-4915-8f9b-a36e15ffb248",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "course",
+                "7bb04f07-5609-4915-8f9b-a36e15ffb248"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Course",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/course/:courseId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "course",
+                ":courseId"
+              ],
+              "variable": [
+                {
+                  "key": "courseId",
+                  "value": "7bb04f07-5609-4915-8f9b-a36e15ffb248"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Semester",
+      "item": [
+        {
+          "name": "Create Semester",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Fall\",\r\n    \"year\": 2026,\r\n    \"registrationStart\": \"2026-09-01T00:00:00.000Z\",\r\n    \"registrationEnd\": \"2026-12-31T23:59:59.000Z\",\r\n    \"feeAmount\": 15000\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/semester",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "semester"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Semesters",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/semester",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "semester"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Semester By Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/semester/:semesterId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "semester",
+                ":semesterId"
+              ],
+              "variable": [
+                {
+                  "key": "semesterId",
+                  "value": "edbeaeac-c2ef-4de5-9212-7e59f69fc401"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Semester",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"feeAmount\": 15500\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/semester/:semesterId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "semester",
+                ":semesterId"
+              ],
+              "variable": [
+                {
+                  "key": "semesterId",
+                  "value": "edbeaeac-c2ef-4de5-9212-7e59f69fc401"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Semester Status",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"status\": \"REGISTRATION_OPEN\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/semester/:semesterId/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "semester",
+                ":semesterId",
+                "status"
+              ],
+              "variable": [
+                {
+                  "key": "semesterId",
+                  "value": "edbeaeac-c2ef-4de5-9212-7e59f69fc401"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Semester",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/semester/:semesterId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "semester",
+                ":semesterId"
+              ],
+              "variable": [
+                {
+                  "key": "semesterId",
+                  "value": "edbeaeac-c2ef-4de5-9212-7e59f69fc401"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Section",
+      "item": [
+        {
+          "name": "Create Section",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"CSE-201-A\",\r\n    \"capacity\": 40,\r\n    \"courseId\": \"7bb04f07-5609-4915-8f9b-a36e15ffb248\",\r\n    \"semesterId\": \"edbeaeac-c2ef-4de5-9212-7e59f69fc401\",\r\n    \"instructorId\": \"033de0b3-d670-4755-993b-7fff533a702d\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/section",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "section"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Sections",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/section",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "section"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Section By Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/section/:sectionId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "section",
+                ":sectionId"
+              ],
+              "variable": [
+                {
+                  "key": "sectionId",
+                  "value": "89be6bda-063c-4d86-978a-4e539e0f8681"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Section",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"capacity\": 30\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/section/:sectionId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "section",
+                ":sectionId"
+              ],
+              "variable": [
+                {
+                  "key": "sectionId",
+                  "value": "89be6bda-063c-4d86-978a-4e539e0f8681"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Section",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/section/:sectionId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "section",
+                ":sectionId"
+              ],
+              "variable": [
+                {
+                  "key": "sectionId",
+                  "value": "89be6bda-063c-4d86-978a-4e539e0f8681"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Section Students",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/section/:sectionId/students",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "section",
+                ":sectionId",
+                "students"
+              ],
+              "variable": [
+                {
+                  "key": "sectionId",
+                  "value": "89be6bda-063c-4d86-978a-4e539e0f8681"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Registration",
+      "item": [
+        {
+          "name": "Create Registration",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"sectionId\": \"89be6bda-063c-4d86-978a-4e539e0f8681\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/registration",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "registration"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Registrations",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/registration/my",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "registration",
+                "my"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Registrations",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/registration",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "registration"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Registration By Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/registration/28b91d51-1c97-4dca-8f40-9eaccb0f32fc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "registration",
+                "28b91d51-1c97-4dca-8f40-9eaccb0f32fc"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Drop Registration",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/registration/:registrationId/drop",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "registration",
+                ":registrationId",
+                "drop"
+              ],
+              "variable": [
+                {
+                  "key": "registrationId",
+                  "value": "28b91d51-1c97-4dca-8f40-9eaccb0f32fc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Registration Status",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"status\": \"ENROLLED\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/registration/:registrationId/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "registration",
+                ":registrationId",
+                "status"
+              ],
+              "variable": [
+                {
+                  "key": "registrationId",
+                  "value": "28b91d51-1c97-4dca-8f40-9eaccb0f32fc"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Payment",
+      "item": [
+        {
+          "name": "Checkout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"semesterId\": \"edbeaeac-c2ef-4de5-9212-7e59f69fc401\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/payment/checkout",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payment",
+                "checkout"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Initiate Bkash Payment",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"paymentId\": \"90996614-1298-423e-ac80-de872003a872\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/payment/bkash/initiate",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payment",
+                "bkash",
+                "initiate"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Bkash Callback",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/payment/bkash/callback",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payment",
+                "bkash",
+                "callback"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Payments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/payment/my",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payment",
+                "my"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Payment By Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/payment/:paymentId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payment",
+                ":paymentId"
+              ],
+              "variable": [
+                {
+                  "key": "paymentId",
+                  "value": "318d97e2-71c3-449e-8bdd-3f9a7569bf4b"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Confirm Payment",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/payment/:paymentId/confirm",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payment",
+                ":paymentId",
+                "confirm"
+              ],
+              "variable": [
+                {
+                  "key": "paymentId",
+                  "value": "318d97e2-71c3-449e-8bdd-3f9a7569bf4b"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Attendance",
+      "item": [
+        {
+          "name": "Mark Attendance",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"registrationId\": \"28b91d51-1c97-4dca-8f40-9eaccb0f32f1\",\r\n    \"date\": \"2026-09-29T00:00:00.000Z\",\r\n    \"status\": \"PRESENT\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/attendance",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "attendance"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Bulk Mark Attendance",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"sectionId\": \"\",\r\n    \"date\": \"2026-09-29T00:00:00.000Z\",\r\n    \"attendances\": [\r\n        {\r\n            \"registrationId\": \"\",\r\n            \"status\": \"\"\r\n        },\r\n        {\r\n            \"registrationId\": \"\",\r\n            \"status\": \"\"\r\n        },\r\n        {\r\n            \"registrationId\": \"\",\r\n            \"status\": \"\"\r\n        }\r\n    ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/attendance/bulk",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "attendance",
+                "bulk"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Attendance",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/attendance/my",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "attendance",
+                "my"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Section Attendance",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/attendance/section/89be6bda-063c-4d86-978a-4e539e0f8681",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "attendance",
+                "section",
+                "89be6bda-063c-4d86-978a-4e539e0f8681"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Attendance",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"status\": \"LATE\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/attendance/479cbc24-83c5-4d40-9dc2-ac4fd6a19502",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "attendance",
+                "479cbc24-83c5-4d40-9dc2-ac4fd6a19502"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Exam",
+      "item": [
+        {
+          "name": "Create Exam",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\": \"Midterm Examination\",\r\n    \"type\": \"MIDTERM\",\r\n    \"totalMarks\": 30,\r\n    \"examDate\": \"2026-10-15T09:00:00.000Z\",\r\n    \"sectionId\": \"89be6bda-063c-4d86-978a-4e539e0f8681\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/exam",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "exam"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Exams",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/exam",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "exam"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Exam By Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/exam/091fe36c-b027-45b9-8615-6a4c08b9f15f",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "exam",
+                "091fe36c-b027-45b9-8615-6a4c08b9f15f"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Exam",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"totalMarks\": 20,\r\n    \"examDate\": \"2026-09-30T09:00:00.000Z\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/exam/091fe36c-b027-45b9-8615-6a4c08b9f15f",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "exam",
+                "091fe36c-b027-45b9-8615-6a4c08b9f15f"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Exam",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/exam/091fe36c-b027-45b9-8615-6a4c08b9f15f",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "exam",
+                "091fe36c-b027-45b9-8615-6a4c08b9f15f"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Result",
+      "item": [
+        {
+          "name": "Create Result",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"examId\": \"091fe36c-b027-45b9-8615-6a4c08b9f15f\",\r\n    \"registrationId\": \"28b91d51-1c97-4dca-8f40-9eaccb0f32fc\",\r\n    \"marks\": 19,\r\n    \"grade\": \"A\",\r\n    \"gradePoint\": 3.75,\r\n    \"status\": \"PUBLISHED\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/result",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "result"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Bulk Create Result",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"examId\": \"\",\r\n    \"results\": [\r\n        {\r\n            \"registrationId\": \"\",\r\n            \"marks\": 22,\r\n            \"grade\": \"B+\",\r\n            \"gradePoint\": 3.25\r\n        },\r\n        {\r\n            \"registrationId\": \"\",\r\n            \"marks\": 22,\r\n            \"grade\": \"B+\",\r\n            \"gradePoint\": 3.25\r\n        },\r\n        {\r\n            \"registrationId\": \"\",\r\n            \"marks\": 22,\r\n            \"grade\": \"B+\",\r\n            \"gradePoint\": 3.25\r\n        }\r\n    ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/result/bulk",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "result",
+                "bulk"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Results",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/result/my",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "result",
+                "my"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Results By Registration",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/result/registration/:registrationId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "result",
+                "registration",
+                ":registrationId"
+              ],
+              "variable": [
+                {
+                  "key": "registrationId",
+                  "value": "28b91d51-1c97-4dca-8f40-9eaccb0f32fc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Result",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"marks\": 18,\r\n    \"status\": \"DRAFT\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/result/7a552ebf-ae08-4fad-8683-0a74705b2436",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "result",
+                "7a552ebf-ae08-4fad-8683-0a74705b2436"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
