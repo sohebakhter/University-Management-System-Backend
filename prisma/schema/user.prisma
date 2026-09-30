@@ -8,7 +8,8 @@ model User {
     role UserRole
 
     status        UserStatus   @default(ACTIVE)
-    image         String?
+    imageUrl      String       @default("")
+    imagePublicId String       @default("")
     authProvider  AuthProvider @default(CREDENTIAL)
     emailVerified Boolean      @default(false)
 

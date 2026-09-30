@@ -8,7 +8,7 @@ export const UpdateUserStatusZodSchema = z.object({
 
 export const UpdateUserZodSchema = z.object({
     name: z.string().min(1, "Name cannot be empty").optional(),
-    image: z.string().url("Image must be a valid URL").optional(),
+    // imageUrl: z.string().url("Image must be a valid URL").optional(),
 });
 
 export const UpdateStudentZodSchema = z.object({

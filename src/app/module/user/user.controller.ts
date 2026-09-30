@@ -2,7 +2,8 @@ import { Request, Response } from "express";
 import { catchAsync } from "../../utils/catchAsync";
 import { UserServices } from "./user.service";
 import { sendResponse } from "../../utils/sendResponse";
-import httpStatus from "http-status"
+import httpStatus from "http-status";
+import { AppError } from "../../utils/appError";
 
 const getAllUser = catchAsync(async (req: Request, res: Response) => {
     const query = req.query
@@ -41,12 +42,20 @@ const updateUserStatus = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
-const updateUser = catchAsync(async (req, res) => {
+const updateUser = catchAsync(async (req: Request, res: Response) => {
     const userId = req.params.userId as string;
-    const payload = req.body
-    const user = req.user!
+    const payload = req.body;
+    const user = req.user!;
+    const file = req.file;
 
-    const result = await UserServices.updateUser(userId, payload, user);
+    if (file && !file.mimetype.startsWith("image/")) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            "Only image files are allowed"
+        );
+    }
+
+    const result = await UserServices.updateUser(userId, payload, user, file?.buffer);
 
     sendResponse(res, {
         statusCode: httpStatus.OK,
@@ -135,7 +144,6 @@ const updateInstructorStatus = catchAsync(async (req, res) => {
     const instructorId = req.params.instructorId as string;
     const payload = req.body
     const user = req.user!
-
     const result = await UserServices.updateInstructorStatus(instructorId, payload, user);
 
     sendResponse(res, {

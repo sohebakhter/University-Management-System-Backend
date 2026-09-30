@@ -6,7 +6,7 @@ export interface IUpdateUserStatusPayload {
 
 export interface IUpdateUserPayload {
     name?: string;
-    image?: string
+    // imageUrl?: string
 }
 
 export interface IUpdateStudentPayload {

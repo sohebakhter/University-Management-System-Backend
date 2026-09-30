@@ -6,6 +6,8 @@ import { AppError } from "../../utils/appError";
 import httpStatus from "http-status"
 import { IUpdateInstructorPayload, IUpdateInstructorStatusPayload, IUpdateStudentPayload, IUpdateUserPayload, IUpdateUserStatusPayload } from "./user.interface";
 import { RequestUser } from "../../middleware/checkAuth";
+import { UploadApiResponse } from "cloudinary";
+import { cloudinary } from "../../lib/cloudinary";
 
 const getAllUser = async (query: IQuery) => {
     const limit = query.limit ? Number(query.limit) : 10;
@@ -159,7 +161,7 @@ const updateUserStatus = async (
     return updatedUser;
 };
 
-const updateUser = async (userId: string, payload: IUpdateUserPayload, user: RequestUser) => {
+const updateUser = async (userId: string, payload: IUpdateUserPayload, user: RequestUser, buffer?: Buffer) => {
     // 1. Check if target user exists
     const existingUser = await prisma.user.findFirst({
         where: {
@@ -176,26 +178,60 @@ const updateUser = async (userId: string, payload: IUpdateUserPayload, user: Req
     }
 
     // 2. Check Admin or Self permission
-    if (
-        user.role !== UserRole.ADMIN &&
-        user.userId !== userId
-    ) {
+    if (user.role !== UserRole.ADMIN && user.userId !== userId) {
         throw new AppError(
             httpStatus.FORBIDDEN,
             "You are not authorized to update this user"
         );
     }
 
-    // 3. Update user information
+    let cloudinaryResult: UploadApiResponse | undefined;
+
+    // 3. Upload image to Cloudinary if buffer exists
+    if (buffer) {
+        cloudinaryResult = await new Promise<UploadApiResponse>(
+            (resolve, reject) => {
+                cloudinary.uploader
+                    .upload_stream({ resource_type: "auto" }, (error, result) => {
+                        if (error) {
+                            return reject(error);
+                        }
+                        if (!result) {
+                            return reject(new Error("No result returned from Cloudinary"));
+                        }
+
+                        resolve(result);
+                    })
+                    .end(buffer);
+            },
+        );
+    }
+
+    // 4. Update user information
     const updatedUser = await prisma.user.update({
         where: {
             id: userId,
         },
-        data: payload,
+        data: {
+            ...payload,
+            ...(cloudinaryResult && {
+                imageUrl: cloudinaryResult.secure_url,
+                imagePublicId: cloudinaryResult.public_id,
+            }),
+        },
         omit: {
             password: true,
         },
     });
+
+    // 5. Delete previous image from Cloudinary ONLY IF a new image was successfully uploaded
+    if (cloudinaryResult && existingUser.imagePublicId && existingUser.imagePublicId.trim() !== "") {
+        try {
+            await cloudinary.uploader.destroy(existingUser.imagePublicId);
+        } catch (destroyError) {
+            console.log("Error While Deleting the image in Cloudinary", destroyError);
+        }
+    }
 
     return updatedUser;
 };

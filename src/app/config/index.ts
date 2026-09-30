@@ -31,5 +31,9 @@ export default {
     bkash_app_key: process.env.BKASH_APP_KEY!,
     bkash_app_secret: process.env.BKASH_APP_SECRET!,
     bkash_callback_url: process.env.BKASH_CALLBACK_URL,
-    bkash_agreement_id: process.env.BKASH_AGREEMENT_ID!
+    bkash_agreement_id: process.env.BKASH_AGREEMENT_ID!,
+
+    cloudinary_name: process.env.CLOUDINARY_NAME,
+    cloudinary_api_key: process.env.CLOUDINARY_API_KEY,
+    cloudinary_api_secret: process.env.CLOUDINARY_API_SECRET,
 };

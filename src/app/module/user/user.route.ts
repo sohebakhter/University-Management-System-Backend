@@ -9,6 +9,7 @@ import {
     UpdateUserStatusZodSchema,
     UpdateUserZodSchema,
 } from "./user.validation";
+import { upload } from "../../lib/multer";
 
 const router = Router()
 
@@ -81,6 +82,7 @@ router.patch(
 router.patch(
     "/:userId",
     auth(UserRole.ADMIN, UserRole.INSTRUCTOR, UserRole.STUDENT),
+    upload.single("image"),
     validateRequest(UpdateUserZodSchema),
     UserController.updateUser
 );
