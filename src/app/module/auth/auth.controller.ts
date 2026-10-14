@@ -181,6 +181,18 @@ const resetPassword = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
+const logoutUser = catchAsync(async(req:Request,res:Response)=>{
+
+    res.clearCookie("accessToken")
+    res.clearCookie("refreshToken")
+
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "Logout successful",
+        data: null,
+    });
+})
 
 export const AuthController = {
     registerUser,
@@ -190,5 +202,6 @@ export const AuthController = {
     refreshToken,
     googleLogin,
     forgotPassword,
-    resetPassword
+    resetPassword,
+    logoutUser
 };
