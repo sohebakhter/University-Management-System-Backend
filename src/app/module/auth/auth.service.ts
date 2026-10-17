@@ -525,6 +525,10 @@ const forgotPassword = async (payload: IForgotPassworddPayload) => {
 
     const otp = crypto.randomInt(100000, 1000000).toString();
 
+    if(config.node_env === "development"){
+        console.log(`[dev] forgot-otp ${email} : ${otp}`)
+    }
+
     const key = `forgot-password-otp:${isUserExits.email}`;
 
     await redisClient.set(key, otp, {
