@@ -386,7 +386,7 @@ const googleLogin = async (payload: IGoogleLoginPayload) => {
     if (!googleIdTokenPayload.name)
         throw new AppError(httpStatus.BAD_REQUEST, "Google Name not found");
 
-    const isUserExistsWithGoogleAuth = await prisma.user.findUnique({
+    const isUserExistsWithGoogleAuth = await prisma.user.findFirst({
         where: {
             email: googleIdTokenPayload.email,
             googleId: googleIdTokenPayload.sub,
@@ -396,7 +396,7 @@ const googleLogin = async (payload: IGoogleLoginPayload) => {
     let user = isUserExistsWithGoogleAuth;
 
     if (!isUserExistsWithGoogleAuth) {
-        const isUserExistsWithCredentials = await prisma.user.findUnique({
+        const isUserExistsWithCredentials = await prisma.user.findFirst({
             where: {
                 email: googleIdTokenPayload.email,
                 authProvider: AuthProvider.CREDENTIAL,
@@ -431,7 +431,7 @@ const googleLogin = async (payload: IGoogleLoginPayload) => {
                 data: {
                     name: googleIdTokenPayload.name,
                     email: googleIdTokenPayload.email,
-                    image: googleIdTokenPayload.picture,
+                    imageUrl: googleIdTokenPayload.picture || "",
                     role: UserRole.STUDENT,
                     googleId: googleIdTokenPayload.sub,
                     authProvider: AuthProvider.GOOGLE,
@@ -445,22 +445,26 @@ const googleLogin = async (payload: IGoogleLoginPayload) => {
                 },
             });
 
-            const templatePath = path.join(
-                process.cwd(),
-                "src/app/templates/user-welcome-email.ejs",
-            );
-            const templateData = {
-                name: user.name,
-            };
+            try {
+                const templatePath = path.join(
+                    process.cwd(),
+                    "src/app/templates/user-welcome-email.ejs",
+                );
+                const templateData = {
+                    name: user.name,
+                };
 
-            const html = await ejs.renderFile(templatePath, templateData);
+                const html = await ejs.renderFile(templatePath, templateData);
 
-            await transporter.sendMail({
-                from: config.smtp_user,
-                to: user.email,
-                subject: "Welcome to the University",
-                html,
-            });
+                await transporter.sendMail({
+                    from: config.smtp_user,
+                    to: user.email,
+                    subject: "Welcome to the University",
+                    html,
+                });
+            } catch (mailError) {
+                console.error("Failed to send welcome email:", mailError);
+            }
         }
     }
 

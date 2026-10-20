@@ -205,36 +205,33 @@ const bulkCreateResult = async (payload: IBulkCreateResultPayload, user: Request
         );
     }
 
-    // Check existing results
-    const existingResults = await prisma.result.findMany({
-        where: {
-            examId: payload.examId,
-            registrationId: {
-                in: registrationIds,
-            },
-        },
-        select: {
-            registrationId: true,
-        },
-    });
-
-    if (existingResults.length > 0) {
-        throw new AppError(
-            httpStatus.CONFLICT,
-            "Result already exists for one or more students"
-        );
-    }
-
-    const data = payload.results.map((item) => ({
-        examId: payload.examId,
-        registrationId: item.registrationId,
-        marks: item.marks,
-        grade: item.grade,
-        gradePoint: item.gradePoint,
-        status: ResultStatus.PUBLISHED,
-    }));
-
-    await prisma.result.createMany({ data: data });
+    // Upsert results (create new or update existing for this exam and registration)
+    await prisma.$transaction(
+        payload.results.map((item) =>
+            prisma.result.upsert({
+                where: {
+                    examId_registrationId: {
+                        examId: payload.examId,
+                        registrationId: item.registrationId,
+                    },
+                },
+                create: {
+                    examId: payload.examId,
+                    registrationId: item.registrationId,
+                    marks: item.marks,
+                    grade: item.grade,
+                    gradePoint: item.gradePoint,
+                    status: ResultStatus.PUBLISHED,
+                },
+                update: {
+                    marks: item.marks,
+                    grade: item.grade,
+                    gradePoint: item.gradePoint,
+                    status: ResultStatus.PUBLISHED,
+                },
+            })
+        )
+    );
 
     const allResults = await prisma.result.findMany({
         where: {
