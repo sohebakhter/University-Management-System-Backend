@@ -429,11 +429,75 @@ const getSectionStudents = async (sectionId: string, user: RequestUser) => {
 
     return registrations;
 };
+const getMySections = async (user: RequestUser) => {
+    const instructor = await prisma.instructor.findFirst({
+        where: {
+            userId: user.userId,
+            isDeleted: false,
+        },
+    });
+
+    if (!instructor) {
+        throw new AppError(
+            httpStatus.NOT_FOUND,
+            "Instructor profile not found"
+        );
+    }
+
+    const result = await prisma.section.findMany({
+        where: {
+            instructorId: instructor.id,
+            isDeleted: false,
+            course: {
+                isDeleted: false,
+            },
+            semester: {
+                isDeleted: false,
+            },
+        },
+        include: {
+            course: {
+                include: {
+                    department: true,
+                },
+            },
+            semester: true,
+            instructor: {
+                include: {
+                    user: {
+                        select: {
+                            id: true,
+                            name: true,
+                            email: true,
+                        },
+                    },
+                },
+            },
+            _count: {
+                select: {
+                    registrations: {
+                        where: {
+                            status: {
+                                in: [RegistrationStatus.ENROLLED, RegistrationStatus.PENDING],
+                            },
+                        },
+                    },
+                },
+            },
+        },
+        orderBy: {
+            createdAt: "desc",
+        },
+    });
+
+    return result;
+};
 export const SectionService = {
     createSection,
     getAllSections,
     getSectionById,
     updateSection,
     deleteSection,
-    getSectionStudents
+    getSectionStudents,
+    getMySections
 }

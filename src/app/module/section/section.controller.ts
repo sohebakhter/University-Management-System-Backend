@@ -76,11 +76,23 @@ const getSectionStudents = catchAsync(async (req, res) => {
         data: result,
     });
 });
+const getMySections = catchAsync(async (req, res) => {
+    const user = req.user!
+    const result = await SectionService.getMySections(user);
+
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "My sections retrieved successfully",
+        data: result,
+    });
+});
 export const SectionController = {
     createSection,
     getAllSections,
     getSectionById,
     updateSection,
     deleteSection,
-    getSectionStudents
+    getSectionStudents,
+    getMySections
 }

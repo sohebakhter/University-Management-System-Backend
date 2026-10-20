@@ -21,7 +21,7 @@ model Section {
     registrations Registration[]
     exams         Exam[]
 
-    @@unique([courseId, semesterId, name])
+    @@unique([courseId, semesterId])
     @@index([instructorId, semesterId])
     @@map("sections")
 }

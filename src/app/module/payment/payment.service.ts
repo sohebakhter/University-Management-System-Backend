@@ -102,7 +102,7 @@ const checkout = async (semesterId: string, user: RequestUser) => {
         where: {
             studentId: student.id,
             semesterId: semester.id,
-            status: PaymentStatus.PENDING,
+            status: {in:[PaymentStatus.PENDING,PaymentStatus.FAILED,PaymentStatus.CANCELLED]},
         },
     });
 
@@ -171,7 +171,7 @@ const initiateBkashPayment = async (paymentId: string, user: RequestUser) => {
         );
     }
 
-    if (payment.status !== PaymentStatus.PENDING && payment.status !== PaymentStatus.FAILED) {
+    if (payment.status !== PaymentStatus.PENDING && payment.status !== PaymentStatus.FAILED && payment.status !== PaymentStatus.CANCELLED) {
         throw new AppError(
             httpStatus.CONFLICT,
             `Payment is already ${payment.status.toLowerCase()}`
@@ -322,7 +322,7 @@ const bkashCallback = async (query: Record<string, any>) => {
         // Prevent duplicate callback processing
         if (payment.status === PaymentStatus.SUCCESS) {
             return {
-                redirectUrl: `${config.frontend_url}/dashboard/payments?status=success`,
+                redirectUrl: `${config.frontend_url}/student/payments?status=success`,
             };
         }
 
@@ -355,7 +355,7 @@ const bkashCallback = async (query: Record<string, any>) => {
         });
 
         return {
-            redirectUrl: `${config.frontend_url}/dashboard/payments?status=success`,
+            redirectUrl: `${config.frontend_url}/student/payments?status=success`,
         };
     }
 
@@ -374,7 +374,7 @@ const bkashCallback = async (query: Record<string, any>) => {
         });
 
         return {
-            redirectUrl: `${config.frontend_url}/dashboard/payments?status=failure`,
+            redirectUrl: `${config.frontend_url}/student/payments?status=failure`,
         };
     }
 
@@ -393,7 +393,7 @@ const bkashCallback = async (query: Record<string, any>) => {
         });
 
         return {
-            redirectUrl: `${config.frontend_url}/dashboard/payments?status=cancel`,
+            redirectUrl: `${config.frontend_url}/student/payments?status=cancel`,
         };
     }
 
@@ -407,7 +407,7 @@ const bkashCallback = async (query: Record<string, any>) => {
     });
 
     return {
-        redirectUrl: `${config.frontend_url}/dashboard/payments?status=failed`,
+        redirectUrl: `${config.frontend_url}/student/payments?status=failed`,
     };
 };
 

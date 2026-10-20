@@ -26,6 +26,11 @@ router.get(
     ),
     SectionController.getAllSections
 );
+router.get(
+    "/my",
+    auth(UserRole.INSTRUCTOR),
+    SectionController.getMySections
+);
 
 router.get(
     "/:sectionId",

@@ -139,32 +139,29 @@ const bulkMarkAttendance = async (payload: IBulkMarkAttendancePayload, user: Req
         );
     }
 
-    // 4. Check duplicate attendance
-    const existingAttendances = await prisma.attendance.findMany({
-        where: {
-            registrationId: {
-                in: registrationIds,
-            },
-            date: payload.date,
-        },
-    });
-
-    if (existingAttendances.length > 0) {
-        throw new AppError(
-            httpStatus.CONFLICT,
-            "Attendance already exists for one or more students"
-        );
-    }
-
-    // 5. Bulk create
-    const result = await prisma.attendance.createMany({
-        data: payload.attendances.map((item) => ({
-            registrationId: item.registrationId,
-            date: payload.date,
-            status: item.status,
-            markedById: instructor.id,
-        })),
-    });
+    // 4. Upsert attendances (create new or update existing for this date)
+    const result = await prisma.$transaction(
+        payload.attendances.map((item) =>
+            prisma.attendance.upsert({
+                where: {
+                    registrationId_date: {
+                        registrationId: item.registrationId,
+                        date: payload.date,
+                    },
+                },
+                create: {
+                    registrationId: item.registrationId,
+                    date: payload.date,
+                    status: item.status,
+                    markedById: instructor.id,
+                },
+                update: {
+                    status: item.status,
+                    markedById: instructor.id,
+                },
+            }),
+        ),
+    );
 
     return result;
 };
