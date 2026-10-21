@@ -17,7 +17,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"name\": \"INS-Soheb\",\r\n    \"email\": \"mrdjworker@gmail.com\",\r\n    \"password\": \"aA@123456\",\r\n    \"role\": \"INSTRUCTOR\"\r\n}",
+              "raw": "{\r\n    \"name\": \"Admin Soheb\",\r\n    \"email\": \"admin@gmail.com\",\r\n    \"password\": \"aA@123456\",\r\n    \"role\": \"ADMIN\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -44,7 +44,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    // \"email\": \"sohebakhterbadhan@gmail.com\",\r\n    \"email\": \"mrdjworker@gmail.com\",\r\n    // \"email\": \"admin@gmail.com\",\r\n    \"otp\": \"647915\"\r\n}",
+              "raw": "{\r\n    // \"email\": \"sohebakhterbadhan@gmail.com\",\r\n    // \"email\": \"mrdjworker@gmail.com\",\r\n    \"email\": \"admin@gmail.com\",\r\n    \"otp\": \"140286\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -163,7 +163,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"email\": \"\"\r\n}",
+              "raw": "{\r\n    \"email\": \"sohebakhterbadhan@gmail.com\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -190,7 +190,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"email\": \"\",\r\n    \"otp\": \"\",\r\n    \"newPassword\": \"\"\r\n}",
+              "raw": "{\r\n    \"email\": \"mrdjworker@gmail.com\",\r\n    \"otp\": \"809964\",\r\n    \"newPassword\": \"@User123\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -209,6 +209,24 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/logout",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "logout"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
@@ -221,7 +239,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/user?searchTerm=Soheb",
+              "raw": "{{baseUrl}}/user",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -241,7 +259,8 @@
                 },
                 {
                   "key": "searchTerm",
-                  "value": "Soheb"
+                  "value": "Soheb",
+                  "disabled": true
                 }
               ]
             }
@@ -418,14 +437,14 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/user/instructors/033de0b3-d670-4755-993b-7fff533a702d",
+              "raw": "{{baseUrl}}/user/instructors/b0c6926b-ffe8-42c7-ab1a-3d6e201053bc",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "user",
                 "instructors",
-                "033de0b3-d670-4755-993b-7fff533a702d"
+                "b0c6926b-ffe8-42c7-ab1a-3d6e201053bc"
               ]
             }
           },
@@ -487,7 +506,7 @@
               "variable": [
                 {
                   "key": "instructorId",
-                  "value": "033de0b3-d670-4755-993b-7fff533a702d"
+                  "value": "b0c6926b-ffe8-42c7-ab1a-3d6e201053bc"
                 }
               ]
             }
@@ -897,7 +916,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"name\": \"CSE-201-A\",\r\n    \"capacity\": 40,\r\n    \"courseId\": \"7bb04f07-5609-4915-8f9b-a36e15ffb248\",\r\n    \"semesterId\": \"edbeaeac-c2ef-4de5-9212-7e59f69fc401\",\r\n    \"instructorId\": \"033de0b3-d670-4755-993b-7fff533a702d\"\r\n}",
+              "raw": "{\r\n    \"name\": \"CSE-201-A\",\r\n    \"capacity\": 40,\r\n    \"courseId\": \"596788b7-8b3e-46bd-8286-851695a61647\",\r\n    \"semesterId\": \"edbeaeac-c2ef-4de5-9212-7e59f69fc401\",\r\n    \"instructorId\": \"033de0b3-d670-4755-993b-7fff533a702d\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -928,6 +947,38 @@
               ],
               "path": [
                 "section"
+              ],
+              "query": [
+                {
+                  "key": "searchTerm",
+                  "value": "eee",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Sections (Instructor)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/section/my",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "section",
+                "my"
+              ],
+              "query": [
+                {
+                  "key": "searchTerm",
+                  "value": "eee",
+                  "disabled": true
+                }
               ]
             }
           },
@@ -950,7 +1001,7 @@
               "variable": [
                 {
                   "key": "sectionId",
-                  "value": "89be6bda-063c-4d86-978a-4e539e0f8681"
+                  "value": "2ed46851-2d9c-40d9-8742-b74245356610"
                 }
               ]
             }
@@ -1032,7 +1083,7 @@
               "variable": [
                 {
                   "key": "sectionId",
-                  "value": "89be6bda-063c-4d86-978a-4e539e0f8681"
+                  "value": "2ed46851-2d9c-40d9-8742-b74245356610"
                 }
               ]
             }
@@ -1194,7 +1245,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"semesterId\": \"edbeaeac-c2ef-4de5-9212-7e59f69fc401\"\r\n}",
+              "raw": "{\r\n    \"semesterId\": \"07df35c4-80af-49da-af1c-9034d1359df2\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1221,7 +1272,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"paymentId\": \"90996614-1298-423e-ac80-de872003a872\"\r\n}",
+              "raw": "{\r\n    \"paymentId\": \"876ef7b8-ab2d-49a1-b964-6b54a067fccd\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1296,7 +1347,7 @@
               "variable": [
                 {
                   "key": "paymentId",
-                  "value": "318d97e2-71c3-449e-8bdd-3f9a7569bf4b"
+                  "value": "90996614-1298-423e-ac80-de872003a872"
                 }
               ]
             }
