@@ -1,4 +1,4 @@
-import type { Request, Response } from "express";
+import type { CookieOptions, Request, Response } from "express";
 import httpStatus from "http-status";
 import { catchAsync } from "../../utils/catchAsync";
 import { AuthService } from "./auth.service";
@@ -182,10 +182,15 @@ const resetPassword = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
-const logoutUser = catchAsync(async(req:Request,res:Response)=>{
+const cookieOptions: CookieOptions = {
+    httpOnly: true,
+    secure: config.node_env !== "development",
+    sameSite: config.node_env === "development" ? "lax" : "none",
+};
 
-    res.clearCookie("accessToken")
-    res.clearCookie("refreshToken")
+const logoutUser = catchAsync(async (req: Request, res: Response) => {
+    res.clearCookie("accessToken", cookieOptions);
+    res.clearCookie("refreshToken", cookieOptions);
 
     sendResponse(res, {
         success: true,
@@ -193,7 +198,7 @@ const logoutUser = catchAsync(async(req:Request,res:Response)=>{
         message: "Logout successful",
         data: null,
     });
-})
+});
 
 export const AuthController = {
     registerUser,
