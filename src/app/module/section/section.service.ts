@@ -406,7 +406,7 @@ const getSectionStudents = async (sectionId: string, user: RequestUser) => {
         where: {
             sectionId: sectionId,
             status: {
-                in: [RegistrationStatus.ENROLLED, RegistrationStatus.PENDING],
+                in: [RegistrationStatus.ENROLLED],
             },
         },
         include: {

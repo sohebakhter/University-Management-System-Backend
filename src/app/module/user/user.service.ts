@@ -22,7 +22,7 @@ const getAllUser = async (query: IQuery) => {
             isDeleted: false
         },
         {
-            status: UserStatus.ACTIVE
+            status: {in:[UserStatus.ACTIVE,UserStatus.SUSPENDED]}
         },
     ];
 
@@ -70,8 +70,21 @@ const getAllUser = async (query: IQuery) => {
             password: true
         }
     })
+    const total = await prisma.user.count({
+            where: {
+            AND: andConditions,
+            },
+        });
 
-    return allUsers
+    return {
+    data: allUsers,
+    meta: {
+            page,
+            limit,
+            total,
+            totalPages: Math.ceil(total / limit),
+        },
+    }
 }
 
 const getSingleUser = async (userId: string) => {
