@@ -141,7 +141,8 @@ const getSingleUser = async (userId: string) => {
 
 const updateUserStatus = async (
     userId: string,
-    payload: IUpdateUserStatusPayload
+    payload: IUpdateUserStatusPayload,
+    user: RequestUser
 ) => {
     // Check if user exists
     const existingUser = await prisma.user.findFirst({
@@ -155,6 +156,13 @@ const updateUserStatus = async (
         throw new AppError(
             httpStatus.NOT_FOUND,
             "User not found"
+        );
+    }
+
+    if(existingUser.id === user.userId){
+        throw new AppError(
+            httpStatus.CONFLICT,
+            `You can't update your user status ${payload.status}`
         );
     }
 
